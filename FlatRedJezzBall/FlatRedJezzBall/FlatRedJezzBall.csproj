@@ -129,6 +129,7 @@
     <Compile Include="Entities\Wall.Generated.cs">
       <DependentUpon>Wall.cs</DependentUpon>
     </Compile>
+    <Compile Include="Enumerations\DirectionEnum.cs" />
     <Compile Include="GlobalContent.Generated.cs" />
     <Compile Include="Performance\IEntityFactory.Generated.cs" />
     <Compile Include="Performance\IPoolable.Generated.cs" />
@@ -146,6 +147,7 @@
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
     <Content Include="Libraries\Xna4Pc\Debug\FlatRedBall.Content.dll" />
+    <Content Include="VisualStudio.gitignore" />
     <None Include="app.config" />
     <None Include="redball.BMP">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -189,7 +191,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Libraries\Xna4Pc\Release\" />
-    <Folder Include="Screens\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />

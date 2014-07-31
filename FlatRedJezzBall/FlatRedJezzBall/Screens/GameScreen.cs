@@ -24,6 +24,7 @@ using Vector3 = Microsoft.Xna.Framework.Vector3;
 using Texture2D = Microsoft.Xna.Framework.Graphics.Texture2D;
 using FlatRedJezzBall.Entities;
 using FlatRedBall.Screens;
+using FlatRedJezzBall.Enumerations;
 #endif
 #endregion
 
@@ -67,9 +68,30 @@ namespace FlatRedJezzBall.Screens
             MouseCursorInstance.Y = InputManager.Mouse.WorldYAt(0.0f);
 
             CheckBallCollisions();
+            CheckProgressWallCollisions();
             CheckDebugControls();
             CheckControls();
 		}
+
+        private void CheckProgressWallCollisions()
+        {
+            if (ProgressWallInstance.Direction == DirectionEnum.Vertical)
+            {
+                if (ProgressWallInstance.CollisionBox.CollideAgainst(TopWall.CollisionBox) ||
+                    ProgressWallInstance.CollisionBox.CollideAgainst(BottomWall.CollisionBox))
+                {
+                    ProgressWallInstance.IsActive = false;
+                }
+            }
+            else if (ProgressWallInstance.Direction == DirectionEnum.Horizontal)
+            {
+                if (ProgressWallInstance.CollisionBox.CollideAgainst(LeftWall.CollisionBox) ||
+                    ProgressWallInstance.CollisionBox.CollideAgainst(RightWall.CollisionBox))
+                {
+                    ProgressWallInstance.IsActive = false;
+                }
+            }
+        }
 
         private void CheckBallCollisions()
         {
@@ -101,6 +123,34 @@ namespace FlatRedJezzBall.Screens
 
         private void CheckControls()
         {
+            if (InputManager.Mouse.IsInGameWindow())
+            {
+                if (InputManager.Mouse.ButtonPushed(Mouse.MouseButtons.LeftButton))
+                {
+                    if (!ProgressWallInstance.IsActive && !IsMouseOverWall())
+                    {
+                        ProgressWallInstance.X = MouseCursorInstance.X;
+                        ProgressWallInstance.Y = MouseCursorInstance.Y;
+                        ProgressWallInstance.Direction = MouseCursorInstance.Direction;
+                        ProgressWallInstance.IsActive = true;
+                    }
+                }
+            }
+        }
+
+        private bool IsMouseOverWall()
+        {
+            bool result = false;
+
+            if (MouseCursorInstance.CollisionBox.CollideAgainst(TopWall.CollisionBox) ||
+                MouseCursorInstance.CollisionBox.CollideAgainst(LeftWall.CollisionBox) ||
+                MouseCursorInstance.CollisionBox.CollideAgainst(RightWall.CollisionBox) ||
+                MouseCursorInstance.CollisionBox.CollideAgainst(BottomWall.CollisionBox))
+            {
+                result = true;
+            }
+
+            return result;
         }
 
         private void CheckDebugControls()

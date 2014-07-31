@@ -12,6 +12,7 @@ using FlatRedBall.Screens;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using FlatRedBall.Math.Geometry;
 
 #if XNA4 || WINDOWS_8
 using Color = Microsoft.Xna.Framework.Color;
@@ -50,6 +51,18 @@ namespace FlatRedJezzBall.Entities
 		static List<string> mRegisteredUnloads = new List<string>();
 		static List<string> LoadedContentManagers = new List<string>();
 		
+		private FlatRedBall.Math.Geometry.AxisAlignedRectangle mCollisionBox;
+		public FlatRedBall.Math.Geometry.AxisAlignedRectangle CollisionBox
+		{
+			get
+			{
+				return mCollisionBox;
+			}
+			private set
+			{
+				mCollisionBox = value;
+			}
+		}
 		protected Layer LayerProvidedByContainer = null;
 
         public ProgressWall()
@@ -77,6 +90,8 @@ namespace FlatRedJezzBall.Entities
 		{
 			// Generated Initialize
 			LoadStaticContent(ContentManagerName);
+			mCollisionBox = new FlatRedBall.Math.Geometry.AxisAlignedRectangle();
+			mCollisionBox.Name = "mCollisionBox";
 			
 			PostInitialize();
 			if (addToManagers)
@@ -92,11 +107,13 @@ namespace FlatRedJezzBall.Entities
 		{
 			LayerProvidedByContainer = layerToAddTo;
 			SpriteManager.AddPositionedObject(this);
+			ShapeManager.AddToLayer(mCollisionBox, LayerProvidedByContainer);
 		}
 		public virtual void AddToManagers (Layer layerToAddTo)
 		{
 			LayerProvidedByContainer = layerToAddTo;
 			SpriteManager.AddPositionedObject(this);
+			ShapeManager.AddToLayer(mCollisionBox, LayerProvidedByContainer);
 			AddToManagersBottomUp(layerToAddTo);
 			CustomInitialize();
 		}
@@ -115,6 +132,10 @@ namespace FlatRedJezzBall.Entities
 			// Generated Destroy
 			SpriteManager.RemovePositionedObject(this);
 			
+			if (CollisionBox != null)
+			{
+				ShapeManager.Remove(CollisionBox);
+			}
 
 
 			CustomDestroy();
@@ -125,6 +146,14 @@ namespace FlatRedJezzBall.Entities
 		{
 			bool oldShapeManagerSuppressAdd = FlatRedBall.Math.Geometry.ShapeManager.SuppressAddingOnVisibilityTrue;
 			FlatRedBall.Math.Geometry.ShapeManager.SuppressAddingOnVisibilityTrue = true;
+			if (mCollisionBox.Parent == null)
+			{
+				mCollisionBox.CopyAbsoluteToRelative();
+				mCollisionBox.AttachTo(this, false);
+			}
+			CollisionBox.Color = Color.AliceBlue;
+			CollisionBox.Height = 16f;
+			CollisionBox.Width = 16f;
 			FlatRedBall.Math.Geometry.ShapeManager.SuppressAddingOnVisibilityTrue = oldShapeManagerSuppressAdd;
 		}
 		public virtual void AddToManagersBottomUp (Layer layerToAddTo)
@@ -134,12 +163,19 @@ namespace FlatRedJezzBall.Entities
 		public virtual void RemoveFromManagers ()
 		{
 			SpriteManager.ConvertToManuallyUpdated(this);
+			if (CollisionBox != null)
+			{
+				ShapeManager.RemoveOneWay(CollisionBox);
+			}
 		}
 		public virtual void AssignCustomVariables (bool callOnContainedElements)
 		{
 			if (callOnContainedElements)
 			{
 			}
+			mCollisionBox.Color = Color.AliceBlue;
+			mCollisionBox.Height = 16f;
+			mCollisionBox.Width = 16f;
 		}
 		public virtual void ConvertToManuallyUpdated ()
 		{
@@ -222,6 +258,7 @@ namespace FlatRedJezzBall.Entities
 		public virtual void SetToIgnorePausing ()
 		{
 			FlatRedBall.Instructions.InstructionManager.IgnorePausingFor(this);
+			FlatRedBall.Instructions.InstructionManager.IgnorePausingFor(CollisionBox);
 		}
 		public virtual void MoveToLayer (Layer layerToMoveTo)
 		{

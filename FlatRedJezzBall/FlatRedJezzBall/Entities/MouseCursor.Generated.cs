@@ -12,6 +12,7 @@ using FlatRedBall.Screens;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using FlatRedBall.Math.Geometry;
 using Microsoft.Xna.Framework.Graphics;
 
 #if XNA4 || WINDOWS_8
@@ -47,43 +48,6 @@ namespace FlatRedJezzBall.Entities
 		#if DEBUG
 		static bool HasBeenLoadedWithGlobalContentManager = false;
 		#endif
-		public enum Direction
-		{
-			Uninitialized = 0, //This exists so that the first set call actually does something
-			Unknown = 1, //This exists so that if the entity is actually a child entity and has set a child state, you will get this
-			Horizontal = 2, 
-			Vertical = 3
-		}
-		protected int mCurrentDirectionState = 0;
-		public Entities.MouseCursor.Direction CurrentDirectionState
-		{
-			get
-			{
-				if (Enum.IsDefined(typeof(Direction), mCurrentDirectionState))
-				{
-					return (Direction)mCurrentDirectionState;
-				}
-				else
-				{
-					return Direction.Unknown;
-				}
-			}
-			set
-			{
-				mCurrentDirectionState = (int)value;
-				switch(CurrentDirectionState)
-				{
-					case  Direction.Uninitialized:
-						break;
-					case  Direction.Unknown:
-						break;
-					case  Direction.Horizontal:
-						break;
-					case  Direction.Vertical:
-						break;
-				}
-			}
-		}
 		static object mLockObject = new object();
 		static List<string> mRegisteredUnloads = new List<string>();
 		static List<string> LoadedContentManagers = new List<string>();
@@ -91,6 +55,18 @@ namespace FlatRedJezzBall.Entities
 		protected static Microsoft.Xna.Framework.Graphics.Texture2D cursor_horizontal;
 		
 		private FlatRedBall.Sprite SpriteInstance;
+		private FlatRedBall.Math.Geometry.AxisAlignedRectangle mCollisionBox;
+		public FlatRedBall.Math.Geometry.AxisAlignedRectangle CollisionBox
+		{
+			get
+			{
+				return mCollisionBox;
+			}
+			private set
+			{
+				mCollisionBox = value;
+			}
+		}
 		protected Layer LayerProvidedByContainer = null;
 
         public MouseCursor()
@@ -120,6 +96,8 @@ namespace FlatRedJezzBall.Entities
 			LoadStaticContent(ContentManagerName);
 			SpriteInstance = new FlatRedBall.Sprite();
 			SpriteInstance.Name = "SpriteInstance";
+			mCollisionBox = new FlatRedBall.Math.Geometry.AxisAlignedRectangle();
+			mCollisionBox.Name = "mCollisionBox";
 			
 			PostInitialize();
 			if (addToManagers)
@@ -136,12 +114,14 @@ namespace FlatRedJezzBall.Entities
 			LayerProvidedByContainer = layerToAddTo;
 			SpriteManager.AddPositionedObject(this);
 			SpriteManager.AddToLayer(SpriteInstance, LayerProvidedByContainer);
+			ShapeManager.AddToLayer(mCollisionBox, LayerProvidedByContainer);
 		}
 		public virtual void AddToManagers (Layer layerToAddTo)
 		{
 			LayerProvidedByContainer = layerToAddTo;
 			SpriteManager.AddPositionedObject(this);
 			SpriteManager.AddToLayer(SpriteInstance, LayerProvidedByContainer);
+			ShapeManager.AddToLayer(mCollisionBox, LayerProvidedByContainer);
 			AddToManagersBottomUp(layerToAddTo);
 			CustomInitialize();
 		}
@@ -164,6 +144,10 @@ namespace FlatRedJezzBall.Entities
 			{
 				SpriteManager.RemoveSprite(SpriteInstance);
 			}
+			if (CollisionBox != null)
+			{
+				ShapeManager.Remove(CollisionBox);
+			}
 
 
 			CustomDestroy();
@@ -181,6 +165,14 @@ namespace FlatRedJezzBall.Entities
 			}
 			SpriteInstance.Texture = cursor_vertical;
 			SpriteInstance.TextureScale = 1f;
+			if (mCollisionBox.Parent == null)
+			{
+				mCollisionBox.CopyAbsoluteToRelative();
+				mCollisionBox.AttachTo(this, false);
+			}
+			CollisionBox.Width = 16f;
+			CollisionBox.Height = 33f;
+			CollisionBox.Color = Color.Orange;
 			FlatRedBall.Math.Geometry.ShapeManager.SuppressAddingOnVisibilityTrue = oldShapeManagerSuppressAdd;
 		}
 		public virtual void AddToManagersBottomUp (Layer layerToAddTo)
@@ -194,6 +186,10 @@ namespace FlatRedJezzBall.Entities
 			{
 				SpriteManager.RemoveSpriteOneWay(SpriteInstance);
 			}
+			if (CollisionBox != null)
+			{
+				ShapeManager.RemoveOneWay(CollisionBox);
+			}
 		}
 		public virtual void AssignCustomVariables (bool callOnContainedElements)
 		{
@@ -202,6 +198,9 @@ namespace FlatRedJezzBall.Entities
 			}
 			SpriteInstance.Texture = cursor_vertical;
 			SpriteInstance.TextureScale = 1f;
+			mCollisionBox.Width = 16f;
+			mCollisionBox.Height = 33f;
+			mCollisionBox.Color = Color.Orange;
 		}
 		public virtual void ConvertToManuallyUpdated ()
 		{
@@ -281,73 +280,6 @@ namespace FlatRedJezzBall.Entities
 				}
 			}
 		}
-		public FlatRedBall.Instructions.Instruction InterpolateToState (Direction stateToInterpolateTo, double secondsToTake)
-		{
-			switch(stateToInterpolateTo)
-			{
-				case  Direction.Horizontal:
-					break;
-				case  Direction.Vertical:
-					break;
-			}
-			var instruction = new FlatRedBall.Instructions.DelegateInstruction<Direction>(StopStateInterpolation, stateToInterpolateTo);
-			instruction.TimeToExecute = FlatRedBall.TimeManager.CurrentTime + secondsToTake;
-			this.Instructions.Add(instruction);
-			return instruction;
-		}
-		public void StopStateInterpolation (Direction stateToStop)
-		{
-			switch(stateToStop)
-			{
-				case  Direction.Horizontal:
-					break;
-				case  Direction.Vertical:
-					break;
-			}
-			CurrentDirectionState = stateToStop;
-		}
-		public void InterpolateBetween (Direction firstState, Direction secondState, float interpolationValue)
-		{
-			#if DEBUG
-			if (float.IsNaN(interpolationValue))
-			{
-				throw new Exception("interpolationValue cannot be NaN");
-			}
-			#endif
-			switch(firstState)
-			{
-				case  Direction.Horizontal:
-					break;
-				case  Direction.Vertical:
-					break;
-			}
-			switch(secondState)
-			{
-				case  Direction.Horizontal:
-					break;
-				case  Direction.Vertical:
-					break;
-			}
-			if (interpolationValue < 1)
-			{
-				mCurrentDirectionState = (int)firstState;
-			}
-			else
-			{
-				mCurrentDirectionState = (int)secondState;
-			}
-		}
-		public static void PreloadStateContent (Direction state, string contentManagerName)
-		{
-			ContentManagerName = contentManagerName;
-			switch(state)
-			{
-				case  Direction.Horizontal:
-					break;
-				case  Direction.Vertical:
-					break;
-			}
-		}
 		[System.Obsolete("Use GetFile instead")]
 		public static object GetStaticMember (string memberName)
 		{
@@ -392,6 +324,7 @@ namespace FlatRedJezzBall.Entities
 		{
 			FlatRedBall.Instructions.InstructionManager.IgnorePausingFor(this);
 			FlatRedBall.Instructions.InstructionManager.IgnorePausingFor(SpriteInstance);
+			FlatRedBall.Instructions.InstructionManager.IgnorePausingFor(CollisionBox);
 		}
 		public virtual void MoveToLayer (Layer layerToMoveTo)
 		{

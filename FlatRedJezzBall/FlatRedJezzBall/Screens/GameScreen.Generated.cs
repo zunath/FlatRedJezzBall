@@ -42,6 +42,7 @@ namespace FlatRedJezzBall.Screens
 		private FlatRedJezzBall.Entities.Wall LeftWall;
 		private FlatRedJezzBall.Entities.MouseCursor MouseCursorInstance;
 		private PositionedObjectList<FlatRedJezzBall.Entities.Ball> BallList;
+		private FlatRedJezzBall.Entities.ProgressWall ProgressWallInstance;
 
 		public GameScreen()
 			: base("GameScreen")
@@ -64,6 +65,8 @@ namespace FlatRedJezzBall.Screens
 			MouseCursorInstance.Name = "MouseCursorInstance";
 			BallList = new PositionedObjectList<FlatRedJezzBall.Entities.Ball>();
 			BallList.Name = "BallList";
+			ProgressWallInstance = new FlatRedJezzBall.Entities.ProgressWall(ContentManagerName, false);
+			ProgressWallInstance.Name = "ProgressWallInstance";
 			
 			
 			PostInitialize();
@@ -83,6 +86,7 @@ namespace FlatRedJezzBall.Screens
 			BottomWall.AddToManagers(mLayer);
 			LeftWall.AddToManagers(mLayer);
 			MouseCursorInstance.AddToManagers(mLayer);
+			ProgressWallInstance.AddToManagers(mLayer);
 			base.AddToManagers();
 			AddToManagersBottomUp();
 			CustomInitialize();
@@ -108,6 +112,7 @@ namespace FlatRedJezzBall.Screens
 						BallList[i].Activity();
 					}
 				}
+				ProgressWallInstance.Activity();
 			}
 			else
 			{
@@ -158,6 +163,11 @@ namespace FlatRedJezzBall.Screens
 			{
 				BallList[i].Destroy();
 			}
+			if (ProgressWallInstance != null)
+			{
+				ProgressWallInstance.Destroy();
+				ProgressWallInstance.Detach();
+			}
 			BallList.MakeTwoWay();
 
 			base.Destroy();
@@ -197,6 +207,7 @@ namespace FlatRedJezzBall.Screens
 			{
 				BallList[i].Destroy();
 			}
+			ProgressWallInstance.RemoveFromManagers();
 		}
 		public virtual void AssignCustomVariables (bool callOnContainedElements)
 		{
@@ -207,6 +218,7 @@ namespace FlatRedJezzBall.Screens
 				BottomWall.AssignCustomVariables(true);
 				LeftWall.AssignCustomVariables(true);
 				MouseCursorInstance.AssignCustomVariables(true);
+				ProgressWallInstance.AssignCustomVariables(true);
 			}
 			if (MouseCursorInstance.Parent == null)
 			{
@@ -228,6 +240,7 @@ namespace FlatRedJezzBall.Screens
 			{
 				BallList[i].ConvertToManuallyUpdated();
 			}
+			ProgressWallInstance.ConvertToManuallyUpdated();
 		}
 		public static void LoadStaticContent (string contentManagerName)
 		{
@@ -247,6 +260,7 @@ namespace FlatRedJezzBall.Screens
 			#endif
 			FlatRedJezzBall.Entities.Wall.LoadStaticContent(contentManagerName);
 			FlatRedJezzBall.Entities.MouseCursor.LoadStaticContent(contentManagerName);
+			FlatRedJezzBall.Entities.ProgressWall.LoadStaticContent(contentManagerName);
 			CustomLoadStaticContent(contentManagerName);
 		}
 		[System.Obsolete("Use GetFile instead")]

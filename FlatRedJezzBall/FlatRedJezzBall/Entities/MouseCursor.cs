@@ -20,6 +20,7 @@ using GuiManager = FlatRedBall.Gui.GuiManager;
 using Keys = Microsoft.Xna.Framework.Input.Keys;
 using Vector3 = Microsoft.Xna.Framework.Vector3;
 using Texture2D = Microsoft.Xna.Framework.Graphics.Texture2D;
+using FlatRedJezzBall.Enumerations;
 
 #endif
 #endregion
@@ -30,10 +31,12 @@ namespace FlatRedJezzBall.Entities
 	{
         private Texture2D _horizontalTexture;
         private Texture2D _verticalTexture;
+        public DirectionEnum Direction { get; set; }
 
 		private void CustomInitialize()
 		{
-            this.CurrentDirectionState = Direction.Vertical;
+            this.Direction = DirectionEnum.Vertical;
+
             _horizontalTexture = FlatRedBallServices.Load<Texture2D>("Content/Entities/MouseCursor/cursor_horizontal");
             _verticalTexture = FlatRedBallServices.Load<Texture2D>("Content/Entities/MouseCursor/cursor_vertical");
 		}
@@ -51,15 +54,19 @@ namespace FlatRedJezzBall.Entities
 
         private void ChangeDirection()
         {
-            if (CurrentDirectionState == Direction.Horizontal)
+            if (Direction == DirectionEnum.Horizontal)
             {
-                CurrentDirectionState = Direction.Vertical;
+                Direction = DirectionEnum.Vertical;
                 SpriteInstance.Texture = _verticalTexture;
+                CollisionBox.Width = 16;
+                CollisionBox.Height = 33;
             }
-            else if (CurrentDirectionState == Direction.Vertical)
+            else if (Direction == DirectionEnum.Vertical)
             {
-                CurrentDirectionState = Direction.Horizontal;
+                Direction = DirectionEnum.Horizontal;
                 SpriteInstance.Texture = _horizontalTexture;
+                CollisionBox.Width = 33;
+                CollisionBox.Height = 16;
             }
         }
 
