@@ -1,0 +1,16 @@
+C:\Users\Tyler\Documents\FlatRedBallProjects\FlatRedJezzBall\FlatRedJezzBall\FlatRedJezzBall\bin\x86\Debug\redball.BMP
+C:\Users\Tyler\Documents\FlatRedBallProjects\FlatRedJezzBall\FlatRedJezzBall\FlatRedJezzBall\bin\x86\Debug\Content\Entities\Ball\ball.png
+C:\Users\Tyler\Documents\FlatRedBallProjects\FlatRedJezzBall\FlatRedJezzBall\FlatRedJezzBall\bin\x86\Debug\FlatRedJezzBall.exe.config
+C:\Users\Tyler\Documents\FlatRedBallProjects\FlatRedJezzBall\FlatRedJezzBall\FlatRedJezzBall\bin\x86\Debug\FlatRedJezzBall.exe
+C:\Users\Tyler\Documents\FlatRedBallProjects\FlatRedJezzBall\FlatRedJezzBall\FlatRedJezzBall\bin\x86\Debug\FlatRedJezzBall.pdb
+C:\Users\Tyler\Documents\FlatRedBallProjects\FlatRedJezzBall\FlatRedJezzBall\FlatRedJezzBall\bin\x86\Debug\FlatRedBall.dll
+C:\Users\Tyler\Documents\FlatRedBallProjects\FlatRedJezzBall\FlatRedJezzBall\FlatRedJezzBall\bin\x86\Debug\FlatRedBall.xml
+C:\Users\Tyler\Documents\FlatRedBallProjects\FlatRedJezzBall\FlatRedJezzBall\FlatRedJezzBall\obj\x86\Debug\FlatRedJezzBall.csprojResolveAssemblyReference.cache
+C:\Users\Tyler\Documents\FlatRedBallProjects\FlatRedJezzBall\FlatRedJezzBall\FlatRedJezzBall\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+C:\Users\Tyler\Documents\FlatRedBallProjects\FlatRedJezzBall\FlatRedJezzBall\FlatRedJezzBall\obj\x86\Debug\FlatRedJezzBall.exe
+C:\Users\Tyler\Documents\FlatRedBallProjects\FlatRedJezzBall\FlatRedJezzBall\FlatRedJezzBall\obj\x86\Debug\FlatRedJezzBall.pdb
+C:\Users\Tyler\Documents\FlatRedBallProjects\FlatRedJezzBall\FlatRedJezzBall\FlatRedJezzBall\bin\x86\Debug\Content\Entities\Wall\wall.png
+C:\Users\Tyler\Documents\FlatRedBallProjects\FlatRedJezzBall\FlatRedJezzBall\FlatRedJezzBall\bin\x86\Debug\Content\Entities\MouseCursor\cursor_horizontal.png
+C:\Users\Tyler\Documents\FlatRedBallProjects\FlatRedJezzBall\FlatRedJezzBall\FlatRedJezzBall\bin\x86\Debug\Content\Entities\MouseCursor\cursor_vertical.png
+C:\Users\Tyler\Documents\FlatRedBallProjects\FlatRedJezzBall\FlatRedJezzBall\FlatRedJezzBall\bin\x86\Debug\Content\Entities\MouseCursor\cursor_horizontal.xnb
+C:\Users\Tyler\Documents\FlatRedBallProjects\FlatRedJezzBall\FlatRedJezzBall\FlatRedJezzBall\bin\x86\Debug\Content\Entities\MouseCursor\cursor_vertical.xnb
